@@ -16,7 +16,7 @@
 ## Configuration reseau (IP Table)
 > **Warning**: ATTENTION, cette partie est critique, toutes mauvaises manipulaion peut mettre par terre la configuration reseau du serveur. Le seul moyen de reparer une erreur critique sera de se connecter en physique au serveur afin d'effectuer les corrections d'erreurs
 
-Example de configuration classique de l'ip table de la node (`/etc/networks/interfaces`):
+Example de configuration classique de l'ip table de la node (`/etc/network/interfaces`):
 
 ```properties
 auto lo
@@ -72,8 +72,8 @@ Une fois une IP assigné a la VM/Container, il faut maintenant ouvrir les ports 
 editer de nouveaux l'ip table (`/etc/networks/interfaces`) en ajoutant a l'interface vmbr1 :
 ```properties
         #[ID] [Fonction de la machine]
-        post-up iptables -t nat -A PREROUTING -i vmbr0 -p tcp --dport [PORT_TO_EXPOSE] -j DNAT --to 192.168.1.[IP_VMBR1_MACHINE]:[PORT_TO_REDIRECT] #[Fonction du port]
-        post-down iptables -t nat -D PREROUTING -i vmbr0 -p tcp --dport [PORT_TO_EXPOSE] -j DNAT --to 192.168.1.[IP_VMBR1_MACHINE]:[PORT_TO_REDIRECT]
+        post-up iptables -t nat -A PREROUTING -i vmbr0 -p tcp --dport [PORT_TO_EXPOSE] -j DNAT --to 192.168.1.[ID_VMBR1_MACHINE]:[PORT_TO_REDIRECT] #[Fonction du port]
+        post-down iptables -t nat -D PREROUTING -i vmbr0 -p tcp --dport [PORT_TO_EXPOSE] -j DNAT --to 192.168.1.[ID_VMBR1_MACHINE]:[PORT_TO_REDIRECT]
 ```
 
 Cet ajout permet de preciser a la machine de rediriger les packet recu du port exposé vers la bonne VM/Conteneur vrs le bon port. Example de configuration :
@@ -93,4 +93,5 @@ Par defaut l'accès SSH d'un serveur bloque la connexion de l'utilisateur root p
 2. `nano /etc/ssh/sshd_config` : Editer le fichier de configuration
 3. `PermitRootLogin yes` : Changer la valeur de la configuration `PermitRootLogin` par `yes`
 4. `systemctl restart ssh` : Redemarer le serveur ssh
-5. `systemctl status ssh` : Vérifier l'état du serveur ssh afin de s'assurer que tout fonctionne correctement
+5. `mkdir -p /run/sshd` : Crée le repertoire run/sshd
+6. `systemctl status ssh` : Vérifier l'état du serveur ssh afin de s'assurer que tout fonctionne correctement
